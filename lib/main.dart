@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:finalproject/RequestAccount.dart';
+import 'package:finalproject/singleEvent.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:finalproject/container_design.dart';
 import 'package:finalproject/ForgotPassword.dart';
 import 'package:flutter/services.dart';
+import 'package:requests/requests.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -30,8 +34,15 @@ class _RosolMainPageState extends State<RosolMainPage> {
       try {
         await _auth.signInWithEmailAndPassword(
           email: username,
-          password: password,
-        );
+          password: password,            
+        ).then((result)=>(){
+            Navigator.push(
+              context,
+                MaterialPageRoute(
+                 builder: (context) =>
+                 requestAccount()),
+             );
+        });
       } on PlatformException catch (e) {
         showDialog(
           context: context,
@@ -203,17 +214,17 @@ class _RosolMainPageState extends State<RosolMainPage> {
                                           );
                                         },
                                       ),
-                                      new FlatButton(
-                                        child: new Text('Forgot Password?'),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    forgotPassword()),
-                                          );
-                                        },
-                                      )
+                                      // new FlatButton(
+                                      //   child: new Text('Forgot Password?'),
+                                      //   onPressed: () {
+                                      //     Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) =>
+                                      //               forgotPassword()),
+                                      //     );
+                                      //   },
+                                      // )
                                     ],
                                   ),
                                 )
@@ -289,55 +300,7 @@ class _RosolMainPageState extends State<RosolMainPage> {
                             ),
                           ),
                         ),
-                        new Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: new InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        openPageContainerLocate()),
-                              );
-                            },
-                            child: new Column(
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: '  Locate Us',
-                                      style: new TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                new InkWell(
-                                  child: new Container(
-                                    height: 200.0,
-                                    width: 450.0,
-                                    decoration: new BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 2,
-                                        ),
-                                        image: new DecorationImage(
-                                            image: new AssetImage(
-                                                'assets/images/location.png'),
-                                            fit: BoxFit.cover)),
-                                    // child: new Link(
-                                    //   url:
-                                    //       'https://www.google.com/maps/place/Notre+Dame+de+la+Delivrance/@33.9543671,35.6417992,15.65z/data=!4m5!3m4!1s0x151f3f542690364d:0xa05b29e5c8c52c07!8m2!3d33.9566207!4d35.6481081',
-                                    // ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        
                       ],
                     ),
                   ),
@@ -357,17 +320,222 @@ class _LoggedInApp extends StatefulWidget {
 }
 
 class __LoggedInAppState extends State<_LoggedInApp> {
+
+  List<Widget> mchildren = [];   
+  // Future object to fetch response from API (Response in future)
+  Future<List<dynamic>> fData;
+  List<String> data = [];
+  bool showOne = false;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: FlatButton(
-          child: Text('Logout'),
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-          },
-        ),
-      ),
-    );
+    // TODO: implement build
+    return MaterialApp(
+         home: Scaffold(
+           
+           body: new Column(
+             children: [
+               new Padding(
+                 padding: EdgeInsets.all(8.0),
+                 child: new InkWell(
+                   onTap: () {
+                     /* Navigator.push(context, MaterialPageRoute(builder: (context) => openPageContainerContact()),
+               );*/
+                   },
+                   child: new Container(
+                     height: 450.0,
+                     width: 450.0,
+                     //color: Colors.red,
+                     child:FutureBuilder<List<dynamic>>(
+                       future: fData, 
+                       builder: (context, snapshot) {
+                           switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    {
+                      // here we are showing loading view in waiting state.
+                      return loadingView();
+                    }
+                  case ConnectionState.active:
+                    {
+                      break;
+                    }
+                             case ConnectionState.done:
+                             
+                              if(showOne){
+                               
+                             }
+                               // TODO: Handle this case.
+                               return   ListView.builder(
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (context, index) {
+                                  dynamic element =  snapshot.data[index];
+                                  return generateColum(element,context);
+                                });
+                               
+                             case ConnectionState.none:
+                               // TODO: Handle this case.
+                               break;
+                           }
+                      
+                                }),
+                   ),
+                 ),
+               ),
+               new Padding(
+                 padding: EdgeInsets.all(8.0),
+                 child: new InkWell(
+                   onTap: () {
+                     /*Navigator.push(context, MaterialPageRoute(builder: (context) => openPageContainerLocate()),
+               );*/
+                   },
+                   child: new InkWell(
+                     child: Row(
+                       children: [
+                         RichText(
+                           text: TextSpan(
+                             text: 'Sign Out',
+                             style: new TextStyle(
+                               fontSize: 20.0,
+                               fontWeight: FontWeight.bold,
+                               color: Colors.black.withOpacity(0.7),
+                             ),
+                           ),
+                         ),
+                         Icon(
+                           Icons.power_settings_new,
+                           color: Colors.blue,
+                           size: 36.0,
+                         ),
+                       ],
+                     ),
+                     onTap: () {
+                       FirebaseAuth.instance.signOut();
+                      //  Navigator.push(
+                      //    context,
+                      //    MaterialPageRoute(builder: (context) => RosolMainPage()),
+                      //  );
+                     },
+                   ),
+                 ),
+               ),
+             ],
+           ),
+         ),
+       );
   }
+
+  
+  @override
+  void initState() {
+ 
+    setState(() {
+
+    fData = getData();
+ 
+    });    
+    super.initState();
+  }
+
+
+
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Container(
+  //     child: Center(
+  //       child: FlatButton(
+  //         child: Text('Logout'),
+  //         onPressed: () {
+  //           FirebaseAuth.instance.signOut();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
+}
+ // View to empty data message
+  Widget noDataView(String msg) => Center(
+        child: Text(
+          msg,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+        ),
+      );
+
+    
+  // Progress indicator widget to show loading.
+  Widget loadingView() => Center(
+        child: CircularProgressIndicator(
+          //backgroundColor: Colors.red,
+        ),
+      );
+
+ Widget generateColum(dynamic item,context) => Card(
+  child: new InkWell(
+    onTap: () {
+      print("tapped");
+       Navigator.push(
+context,
+     MaterialPageRoute(
+     builder: (context) => singleEvent(key:new Key(item['id'])),)    
+  );
+
+    },
+     child: ListTile(
+      leading: Icon(Icons.photo_album),
+      title: Text(item['name']),
+    ),
+  ),
+);
+
+Widget showLoading(){
+ return new Center(
+        child: CircularProgressIndicator(
+          //backgroundColor: Colors.red,
+        ),
+      );
+}
+
+Future<List<dynamic>> getData() async {
+   var url = "https://rosol-a4d92.firebaseio.com/events.json";
+  var r = await Requests.get(url);
+r.raiseForStatus();
+
+     print('TEST inside get data');
+String body = r.content();
+
+    print("after call data");
+var decoded = json.decode(body);
+
+    print("before create data");
+    List<dynamic> data = [];
+    print("after create data");
+    print(decoded);
+    // for(int i = 0 ; i< decoded.length;i++){
+    //  data.add(decoded[i]['name']);
+    // }
+    
+    
+decoded.forEach((key,value){
+  print(key);
+  value['id'] = key;
+  data.add(value);
+});
+
+    // forEach(var key in decoded.Keys){
+    //   print(key);
+    //   print(decoded[key]);
+    //   // data.add(dec['name']);
+    //   // check if the value is not null or empty.
+      
+    //       var value = decoded[key]['name'];
+    //       data.add(value);
+    //       // code to do something with 
+      
+    // }
+
+    print(data);
+    print(data.length);
+    //  data.add(decoded[0]['name']);
+    //  data.add(decoded[1]['name']);
+    //  data.add(decoded[2]['name']);
+return data;
 }

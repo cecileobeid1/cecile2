@@ -2,16 +2,18 @@
 import 'dart:io';
 
 import 'package:finalproject/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:requests/requests.dart';
 import 'dart:convert';
 
 
-
 class singleEvent extends StatefulWidget {
-   singleEvent({Key key, this.id}) : super(key: key);
-   final int id;
+  
+  
+   singleEvent({Key key}) : super(key: key);
+  
 
 
   
@@ -23,17 +25,14 @@ class singleEvent extends StatefulWidget {
 class MyEventState extends State<singleEvent>{
   List<Widget> mchildren = [];   
   // Future object to fetch response from API (Response in future)
-  Future<List<String>> fData;
+  Future<List<dynamic>> fData;
   List<String> data = [];
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
          home: Scaffold(
-           appBar: AppBar(
-             backgroundColor: const Color(0xdbcd2e),
-             title: Text('رسل يسوع ومريم'),
-           ),
+           
            body: new Column(
              children: [
                new Padding(
@@ -46,8 +45,8 @@ class MyEventState extends State<singleEvent>{
                    child: new Container(
                      height: 450.0,
                      width: 450.0,
-                     color: Colors.red,
-                     child:FutureBuilder<List<String>>(
+                     //color: Colors.red,
+                     child:FutureBuilder<List<dynamic>>(
                        future: fData, 
                        builder: (context, snapshot) {
                            switch (snapshot.connectionState) {
@@ -62,7 +61,7 @@ class MyEventState extends State<singleEvent>{
                     }
                              case ConnectionState.done:
                                // TODO: Handle this case.
-                               String item = snapshot.data[0];
+                               dynamic item = snapshot.data[0];
                                 return   generateContainer(item, context);
                                
                              case ConnectionState.none:
@@ -102,10 +101,11 @@ class MyEventState extends State<singleEvent>{
                        ],
                      ),
                      onTap: () {
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(builder: (context) => RosolMainPage()),
-                       );
+                       FirebaseAuth.instance.signOut(); 
+                      //  Navigator.push(
+                      //    context,
+                      //    MaterialPageRoute(builder: (context) => RosolMainPage()),
+                      //  );
                      },
                    ),
                  ),
@@ -121,8 +121,14 @@ class MyEventState extends State<singleEvent>{
   void initState() {
  
     setState(() {
-
-    fData = getData();
+    Key Kid = context.widget.key  ;
+    print("before kid");
+    print(Kid);
+    String testId= Kid.toString();
+    print(testId);
+    String id = testId.substring(3,testId.length-3);
+    print(id);
+    fData = getData(id);
  
     });    
     super.initState();
@@ -135,8 +141,8 @@ class MyEventState extends State<singleEvent>{
 
 
 
-Future<List<String>> getData() async {
-   var url = "https://jsonplaceholder.typicode.com/posts/";
+Future<List<dynamic>> getData(String id) async {
+   var url = "https://rosol-a4d92.firebaseio.com/events/"+id+".json";
   var r = await Requests.get(url);
 r.raiseForStatus();
 
@@ -144,35 +150,33 @@ r.raiseForStatus();
 String body = r.content();
 var decoded = json.decode(body);
 
-    List<String> data = [];
-     data.add(decoded[0]['title']);
-     data.add(decoded[1]['title']);
-     data.add(decoded[2]['title']);
+    List<dynamic> data = [];
+    data.add(decoded);
 return data;
 }
 
 Widget showLoading(){
  return new Center(
         child: CircularProgressIndicator(
-          backgroundColor: Colors.red,
+          //backgroundColor: Colors.red,
         ),
       );
 }
 
- Widget generateContainer(String item,context) => Card(
+ Widget generateContainer(dynamic item,context) => Card(
   child: new InkWell(
-    onTap: () {
-      print("tapped");
-       Navigator.push(
-context,
-     MaterialPageRoute(
-     builder: (context) => singleEvent()),
-  );
-    },
-     child: ListTile(
+     child:ListView(
+     children:<Widget> [ListTile(
       leading: Icon(Icons.photo_album),
-      title: Text(item),
+      title: Text(item['name']),
     ),
+    ListTile(
+      title: Text(item['timestamp']),
+    ),
+    ListTile(
+      title: Text(item['description']),
+    )
+    ]),
   ),
 );
 
@@ -186,7 +190,7 @@ context,
   // Progress indicator widget to show loading.
   Widget loadingView() => Center(
         child: CircularProgressIndicator(
-          backgroundColor: Colors.red,
+         // backgroundColor: Colors.red,
         ),
       );
 

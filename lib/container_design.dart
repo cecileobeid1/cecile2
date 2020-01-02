@@ -9,20 +9,34 @@ class openPageContainerLocate extends StatelessWidget {
           image: new DecorationImage(
               image: new AssetImage('assets/images/rosol - Copy.jpg'),
               fit: BoxFit.cover)),
-      child: RichText(
-        text: TextSpan(
-          text: 'Who We Are ',
-          style: DefaultTextStyle.of(context).style,
-          children: <TextSpan>[
-            TextSpan(
-                text: 'Conta',
-                style: new TextStyle(fontSize: 40.0, color: Color(0x1C1C1A))),
-            TextSpan(
-                text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: ' world!'),
-          ],
-        ),
-      ),
+      child: 
+            //url:'https://www.google.com/maps/place/Notre+Dame+de+la+Delivrance/@33.9543671,35.6417992,15.65z/data=!4m5!3m4!1s0x151f3f542690364d:0xa05b29e5c8c52c07!8m2!3d33.9566207!4d35.6481081',
+              Card(
+                  
+                  child:  new InkWell(
+                  child: new Container(
+                  padding:EdgeInsets.all(10),
+                    child: new Link(
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: 'GO',
+                          style: new TextStyle(
+                              fontSize: 30.0,
+                              color: Colors.black.withOpacity(0.7)),
+                        ),
+                      ),
+                      url:'https://www.google.com/maps/place/Notre+Dame+de+la+Delivrance/@33.9543671,35.6417992,15.65z/data=!4m5!3m4!1s0x151f3f542690364d:0xa05b29e5c8c52c07!8m2!3d33.9566207!4d35.6481081',
+                      /*Text('Facebook'),
+                              url:'https://www.facebook.com',*/
+                      //onTap: () => launch('https://facebook.com/')
+                      //onTap: _launchFacebookURL(),
+                
+                ),
+                  ),
+                  ),
+                ),
+         
     );
   }
 }
@@ -43,8 +57,12 @@ class openPageContainerContact extends StatelessWidget {
                     fit: BoxFit.cover)),
             child: new Column(
               children: <Widget>[
-                new InkWell(
+                Container(
+                  height: 100,
+                  child: Card(
+                  child:new InkWell(
                   child: new Container(
+                  padding:EdgeInsets.all(10),
                     child: new Link(
                       child: RichText(
                         textAlign: TextAlign.center,
@@ -63,8 +81,16 @@ class openPageContainerContact extends StatelessWidget {
                     ),
                   ),
                 ),
-                new InkWell(
+                
+                ),
+ 
+                ),
+               Container(
+                 height: 100,
+               child: Card(
+                  child: new InkWell(
                   child: new Container(
+                  padding:EdgeInsets.all(10),
                     child: new Link(
                       child: RichText(
                         textAlign: TextAlign.center,
@@ -83,14 +109,21 @@ class openPageContainerContact extends StatelessWidget {
                     ),
                   ),
                 ),
+                
+                ),
+                ),
                 /*new Row(
                         children: <Widget> [
                         icon: Icon(
                         Icons.person,
                         color: Colors.white,
                         ),*/
-                new InkWell(
+                Container(
+                  height: 100,
+                child: Card(
+                  child: new InkWell(
                   child: new Container(
+                  padding:EdgeInsets.all(10),
                     child: new Link(
                       child: RichText(
                         textAlign: TextAlign.center,
@@ -110,6 +143,9 @@ class openPageContainerContact extends StatelessWidget {
                     ),
                   ),
                 ),
+               
+                ),
+               ),
                 /*new InkWell(
                     child: new Link(
                       child: Text('Saydet Al Khalas'),
@@ -121,8 +157,13 @@ class openPageContainerContact extends StatelessWidget {
                 /* const Expanded(
                                     child: Text('01111111'),
                                     ),*/
-                new InkWell(
+                Container(
+                  height: 100,
+                child:  Card(
+                  
+                  child:  new InkWell(
                   child: new Container(
+                  padding:EdgeInsets.all(10),
                     child: new Link(
                       child: RichText(
                         textAlign: TextAlign.center,
@@ -138,9 +179,12 @@ class openPageContainerContact extends StatelessWidget {
                               url:'https://www.facebook.com',*/
                       //onTap: () => launch('https://facebook.com/')
                       //onTap: _launchFacebookURL(),
-                    ),
+                
+                ),
+                  ),
                   ),
                 ),
+              ),
               ],
             )),
       ),

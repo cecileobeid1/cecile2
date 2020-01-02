@@ -46,9 +46,9 @@ class MyListState extends State<loginPagePage>{
                );*/
                    },
                    child: new Container(
-                     height: 450.0,
+                     height: 800.0,
                      width: 450.0,
-                     color: Colors.red,
+                     //color: Colors.red,
                      child:FutureBuilder<List<String>>(
                        future: fData, 
                        builder: (context, snapshot) {
@@ -164,7 +164,7 @@ return data;
 Widget showLoading(){
  return new Center(
         child: CircularProgressIndicator(
-          backgroundColor: Colors.red,
+          //backgroundColor: Colors.red,
         ),
       );
 }
@@ -197,7 +197,7 @@ context,
   // Progress indicator widget to show loading.
   Widget loadingView() => Center(
         child: CircularProgressIndicator(
-          backgroundColor: Colors.red,
+          //backgroundColor: Colors.red,
         ),
       );
 
@@ -208,3 +208,5 @@ context,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
         ),
       );
+
+      
