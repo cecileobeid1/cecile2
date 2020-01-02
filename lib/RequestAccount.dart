@@ -1,6 +1,44 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class requestAccount extends StatelessWidget {
+class requestAccount extends StatefulWidget {
+  @override
+  _requestAccountState createState() => _requestAccountState();
+}
+
+class _requestAccountState extends State<requestAccount> {
+  final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String username, password;
+
+  void _submit() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      try {
+        NavigatorState _nav = Navigator.of(context);
+        await _auth.createUserWithEmailAndPassword(
+          email: username,
+          password: password,
+        );
+        _nav.pop();
+      } on PlatformException catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message),
+            );
+          },
+        );
+      }
+    } else {
+      print('Invalid');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,52 +50,44 @@ class requestAccount extends StatelessWidget {
         body: Container(
           decoration: new BoxDecoration(
               image: new DecorationImage(
-                image: new AssetImage('assets/images/rosol - Copy.jpg'),
-                fit: BoxFit.cover,
-              )),
-          child: Column(
-            children: <Widget>[
-              new Container(
-                child: new TextField(
-                  decoration: new InputDecoration(labelText: 'Username'),
+            image: new AssetImage('assets/images/rosol - Copy.jpg'),
+            fit: BoxFit.cover,
+          )),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                new Container(
+                  child: new TextFormField(
+                    onSaved: (String text) {
+                      username = text;
+                    },
+                    decoration: new InputDecoration(
+                        labelText: 'Email:example@example.com'),
+                  ),
                 ),
-              ),
-              new Container(
-                child: new TextField(
-                  decoration: new InputDecoration(
-                      labelText: 'Email:example@example.com'),
-                  obscureText: true,
+                new Container(
+                  child: new TextFormField(
+                    decoration: new InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    validator: (String input) {
+                      return input.length < 6
+                          ? 'Must be aat least 6 characters'
+                          : null;
+                    },
+                    onSaved: (String text) {
+                      password = text;
+                    },
+                  ),
                 ),
-              ),
-              new Container(
-                child: new TextField(
-                  decoration: new InputDecoration(labelText: 'Address'),
-                  obscureText: true,
+                RaisedButton(
+                  onPressed: () {
+                    _submit();
+                  },
+                  child: Text('Register'),
                 ),
-              ),
-              new Container(
-                child: new TextField(
-                  decoration: new InputDecoration(labelText: 'Phone Number'),
-                  obscureText: true,
-                ),
-              ),
-              new Container(
-                child: new Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => requestSent()),
-                        );
-                      },
-                      child: Text('Register'),
-                    ),
-                  ],
-                ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),

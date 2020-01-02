@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "846920427567",
+    "firebase_url": "https://rosol-a4d92.firebaseio.com",
+    "project_id": "rosol-a4d92",
+    "storage_bucket": "rosol-a4d92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846920427567:android:35cc6afcb97a022e4e3eda",
+        "android_client_info": {
+          "package_name": "com.example.finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846920427567-vd2tn7qdoq976ud2g2o8pkr14pcqbl14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjlaI1BmxU9Ml1KvcGdS_hs04PjqoDaVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846920427567-vd2tn7qdoq976ud2g2o8pkr14pcqbl14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
